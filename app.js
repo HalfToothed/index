@@ -18,14 +18,41 @@ function htmlToDOM(htmlString) {
   return parser.parseFromString(htmlString, "text/html");
 }
 
+function extractSections(doc) {
+    const result = [];
+
+    const sections = doc.querySelectorAll(".current-events-content")[0].children;
+
+    let currentSection = null;
+
+    Array.from(sections).forEach(section => {
+        console.log(section);
+    
+        if(section.tagName == 'P' ){
+
+            currentSection = {
+                title: section.textContent.trim(),
+                items: []
+            };
+        }
+        else{
+
+            const list = section.innerText;
+
+            currentSection.items.push(list)
+
+            if (currentSection && currentSection.items.length > 0) {
+                result.push(currentSection);
+            }
+        }
+    });
+    return result;
+}
+
 async function loadCurrentEvents() {
   const html = await fetchCurrentEvents();
   const doc = htmlToDOM(html);
-  return doc;
+  const section = extractSections(doc);
 }
 
-async function getData(){
-    const data = await loadCurrentEvents()
-}
-
-getData();
+loadCurrentEvents();
