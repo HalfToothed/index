@@ -3,7 +3,6 @@ function parseEvents(doc) {
 
   // Get all top-level list items
   const topLevelItems = doc.querySelectorAll("#list > li");
-  console.log(topLevelItems);
 
   topLevelItems.forEach((topItem) => {
     // Get the topic/title (first anchor in the top-level li)
@@ -129,10 +128,48 @@ function extractSections(doc) {
   return result;
 }
 
+function setupDOM(events){
+
+  const app = document.getElementById('app');
+
+  events.forEach(event =>{
+    const categoryDiv = document.createElement('div');
+    categoryDiv.setAttribute('class','category-section');
+
+    let headerDiv = document.createElement('div')
+    headerDiv.setAttribute('class', 'category-header')
+    headerDiv.textContent = event.title;
+    
+    categoryDiv.appendChild(headerDiv);
+
+    const items = event.items;
+    items.forEach(item => {
+
+      const eventDiv = document.createElement('div')
+      eventDiv.setAttribute('class','event');
+
+      const eventTitleDiv = document.createElement('div');
+      eventTitleDiv.setAttribute('class','event-title');
+      eventTitleDiv.textContent = item.topic;
+      eventDiv.appendChild(eventTitleDiv)
+
+      const eventTextDiv = document.createElement('div');
+      eventTextDiv.setAttribute('class','event-text');
+      eventTextDiv.textContent = item.description;
+      eventDiv.appendChild(eventTextDiv)
+
+      categoryDiv.appendChild(eventDiv);
+    });
+
+    app.appendChild(categoryDiv);
+  })
+}
+
 async function loadCurrentEvents() {
   const html = await fetchCurrentEvents();
   const doc = htmlToDOM(html);
   const eventObject = extractSections(doc);
+  setupDOM(eventObject);
 }
 
 loadCurrentEvents();
