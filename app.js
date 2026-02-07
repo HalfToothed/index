@@ -105,7 +105,7 @@ function htmlToDOM(htmlString) {
 function extractSections(doc) {
   const result = [];
 
-  const sections = doc.querySelectorAll(".current-events-content")[1].children;
+  const sections = doc.querySelectorAll(".current-events-content")[0].children;
 
   let currentSection = null;
 
@@ -128,41 +128,59 @@ function extractSections(doc) {
   return result;
 }
 
-function setupDOM(events){
+function getDate() {
+  const now = new Date();
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
 
-  const app = document.getElementById('app');
+  return now.toLocaleDateString("en-US", options);
+}
+function setupDOM(events) {
+  const date = document.getElementById("date");
+  date.textContent = getDate();
 
-  events.forEach(event =>{
-    const categoryDiv = document.createElement('div');
-    categoryDiv.setAttribute('class','category-section');
+  const app = document.getElementById("app");
 
-    let headerDiv = document.createElement('div')
-    headerDiv.setAttribute('class', 'category-header')
+  events.forEach((event) => {
+    const categoryDiv = document.createElement("div");
+    categoryDiv.setAttribute("class", "category-section");
+
+    let headerDiv = document.createElement("div");
+    headerDiv.setAttribute("class", "category-header");
     headerDiv.textContent = event.title;
-    
+
     categoryDiv.appendChild(headerDiv);
 
     const items = event.items;
-    items.forEach(item => {
+    items.forEach((item) => {
+      const eventDiv = document.createElement("div");
+      eventDiv.setAttribute("class", "event");
 
-      const eventDiv = document.createElement('div')
-      eventDiv.setAttribute('class','event');
-
-      const eventTitleDiv = document.createElement('div');
-      eventTitleDiv.setAttribute('class','event-title');
+      const eventTitleDiv = document.createElement("div");
+      eventTitleDiv.setAttribute("class", "event-title");
       eventTitleDiv.textContent = item.topic;
-      eventDiv.appendChild(eventTitleDiv)
+      eventDiv.appendChild(eventTitleDiv);
 
-      const eventTextDiv = document.createElement('div');
-      eventTextDiv.setAttribute('class','event-text');
+      const eventTextDiv = document.createElement("div");
+      eventTextDiv.setAttribute("class", "event-text");
       eventTextDiv.textContent = item.description;
-      eventDiv.appendChild(eventTextDiv)
+      eventDiv.appendChild(eventTextDiv);
+
+      const anchor = document.createElement("a");
+      anchor.textContent = item.sources[0].name;
+      anchor.href = item.sources[0].url;
+      anchor.setAttribute("class", "source-badge");
+      eventDiv.appendChild(anchor);
 
       categoryDiv.appendChild(eventDiv);
     });
 
     app.appendChild(categoryDiv);
-  })
+  });
 }
 
 async function loadCurrentEvents() {
