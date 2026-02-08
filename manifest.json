@@ -3,7 +3,7 @@
   "name": "Index — Daily World Events",
   "short_name": "Index",
   "description": "A calm, daily index of global events sourced from Wikipedia.",
-  "start_url": "/",
+  "start_url": "/index",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "display": "standalone", 
