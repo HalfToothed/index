@@ -19,7 +19,8 @@
     <script src="app.js" defer></script>
     <script>
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("sw.js");
+        navigator.serviceWorker.register('/index/sw.js',
+          {scope: '/index/'});
       }
     </script>
   </body>

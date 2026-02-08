@@ -4,13 +4,15 @@ const VERSION = "v1";
 // The name of the cache
 const CACHE_NAME = `index-${VERSION}`;
 
+var GHPATH = '/index';
+
 // The static resources that the app needs to function.
 const APP_STATIC_RESOURCES = [
-  "/",
-  "/index.html",
-  "/app.js",
-  "/style.css",
-  "/icons/chikawa.png",
+  `${GHPATH}/`,
+  `${GHPATH}/index.html`,
+  `${GHPATH}/styles.css`,
+  `${GHPATH}/icons/chikawa.png`,
+  `${GHPATH}/app.js`
 ];
 
 // On install, cache the static resources
