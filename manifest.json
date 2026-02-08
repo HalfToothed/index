@@ -1,0 +1,17 @@
+{
+
+  "name": "Index — Daily World Events",
+  "short_name": "Index",
+  "description": "A calm, daily index of global events sourced from Wikipedia.",
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "display": "standalone", 
+  "icons": [
+      {
+        "src": "/icons/chikawa.png",
+        "type": "image/png",
+        "sizes": "600x600"
+      }
+  ]
+}
