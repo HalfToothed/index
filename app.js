@@ -5,9 +5,13 @@ function parseEvents(doc) {
   const topLevelItems = doc.querySelectorAll("#list > li");
 
   topLevelItems.forEach((topItem) => {
-    // Get the topic/title (first anchor in the top-level li)
-    const topicLink = topItem.querySelector(":scope > a");
-    const topic = topicLink ? topicLink.textContent.trim() : null;
+    let topic = null;
+
+    const topicLink = topItem.querySelector(":scope a, :scope i > a");
+
+    if (topicLink) {
+      topic = topicLink ? topicLink.textContent.trim() : null;
+    }
 
     // Find all nested event descriptions (deepest level li elements)
     const eventItems = findEventItems(topItem);
@@ -44,7 +48,7 @@ function findEventItems(element) {
   return eventItems;
 }
 
-function extractEventData(eventLi, parentTopic, parentWikiUrl) {
+function extractEventData(eventLi, parentTopic) {
   // Clone the node to avoid modifying the original
   const clone = eventLi.cloneNode(true);
 
@@ -200,6 +204,7 @@ function setupDOM(events) {
       const anchor = document.createElement("a");
       anchor.textContent = item.sources[0].name;
       anchor.href = item.sources[0].url;
+      anchor.target = "_blank";
       anchor.setAttribute("class", "source-badge");
       eventDiv.appendChild(anchor);
 
