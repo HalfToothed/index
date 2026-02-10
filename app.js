@@ -6,11 +6,12 @@ function parseEvents(doc) {
 
   topLevelItems.forEach((topItem) => {
     let topic = null;
+    if (topItem.innerHTML[0] == "<") {
+      const topicLink = topItem.querySelector(":scope a, :scope i > a");
 
-    const topicLink = topItem.querySelector(":scope a, :scope i > a");
-
-    if (topicLink) {
-      topic = topicLink ? topicLink.textContent.trim() : null;
+      if (topicLink) {
+        topic = topicLink.textContent.trim();
+      }
     }
 
     // Find all nested event descriptions (deepest level li elements)
@@ -87,7 +88,6 @@ function extractEventData(eventLi, parentTopic) {
 }
 
 async function fetchCurrentEvents() {
-
   const CACHE_KEY = "wiki_current_events";
   const TIME_KEY = "wiki_last_updated";
   const ONE_HOUR = 3600000;
@@ -136,11 +136,21 @@ function htmlToDOM(htmlString) {
 function extractSections(doc) {
   const result = [];
 
-  const sections = doc.querySelectorAll(".current-events-content")[0].children;
+  const sections = doc.querySelectorAll(".current-events-content")[1].children;
+  const sectionsArray = Array.from(sections);
 
+  const notEmpty = sectionsArray.some(section => section.tagName == "P");
+
+  if(!notEmpty){
+    return [{
+      title: "Nothing to report just yet",
+      items:[]
+    }]
+  }
+  
   let currentSection = null;
 
-  Array.from(sections).forEach((section) => {
+  sectionsArray.forEach((section) => {
     if (section.tagName == "P") {
       currentSection = {
         title: section.textContent.trim(),
