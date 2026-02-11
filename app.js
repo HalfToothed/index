@@ -136,18 +136,20 @@ function htmlToDOM(htmlString) {
 function extractSections(doc) {
   const result = [];
 
-  const sections = doc.querySelectorAll(".current-events-content")[1].children;
+  const sections = doc.querySelectorAll(".current-events-content")[0].children;
   const sectionsArray = Array.from(sections);
 
-  const notEmpty = sectionsArray.some(section => section.tagName == "P");
+  const notEmpty = sectionsArray.some((section) => section.tagName == "P");
 
-  if(!notEmpty){
-    return [{
-      title: "Nothing to report just yet",
-      items:[]
-    }]
+  if (!notEmpty) {
+    return [
+      {
+        title: "Nothing to report just yet",
+        items: [],
+      },
+    ];
   }
-  
+
   let currentSection = null;
 
   sectionsArray.forEach((section) => {
@@ -196,27 +198,38 @@ function setupDOM(events) {
 
     categoryDiv.appendChild(headerDiv);
 
+    let eventDiv = null;
+    let lastTopic = "";
+
     const items = event.items;
     items.forEach((item) => {
-      const eventDiv = document.createElement("div");
-      eventDiv.setAttribute("class", "event");
+      if (lastTopic != item.topic) {
+        eventDiv = document.createElement("div");
+        eventDiv.setAttribute("class", "event");
 
-      const eventTitleDiv = document.createElement("div");
-      eventTitleDiv.setAttribute("class", "event-title");
-      eventTitleDiv.textContent = item.topic;
-      eventDiv.appendChild(eventTitleDiv);
+        const eventTitleDiv = document.createElement("div");
+        eventTitleDiv.setAttribute("class", "event-title");
+        eventTitleDiv.textContent = item.topic;
+        eventDiv.appendChild(eventTitleDiv);
+      }
+
+      lastTopic = item.topic;
 
       const eventTextDiv = document.createElement("div");
       eventTextDiv.setAttribute("class", "event-text");
       eventTextDiv.textContent = item.description;
       eventDiv.appendChild(eventTextDiv);
-
-      const anchor = document.createElement("a");
-      anchor.textContent = item.sources[0].name;
-      anchor.href = item.sources[0].url;
-      anchor.target = "_blank";
-      anchor.setAttribute("class", "source-badge");
-      eventDiv.appendChild(anchor);
+      
+      if (item.sources.length) {
+        item.sources.forEach((source) => {
+          const anchor = document.createElement("a");
+          anchor.textContent = source.name;
+          anchor.href = source.url;
+          anchor.target = "_blank";
+          anchor.setAttribute("class", "source-badge");
+          eventDiv.appendChild(anchor);
+        });
+      }
 
       categoryDiv.appendChild(eventDiv);
     });
