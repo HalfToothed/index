@@ -5,9 +5,14 @@ function parseEvents(doc) {
   const topLevelItems = doc.querySelectorAll("#list > li");
 
   topLevelItems.forEach((topItem) => {
-    // Get the topic/title (first anchor in the top-level li)
-    const topicLink = topItem.querySelector(":scope > a");
-    const topic = topicLink ? topicLink.textContent.trim() : null;
+    let topic = null;
+    if (topItem.innerHTML[0] == "<") {
+      const topicLink = topItem.querySelector(":scope a, :scope i > a");
+
+      if (topicLink) {
+        topic = topicLink.textContent.trim();
+      }
+    }
 
     // Find all nested event descriptions (deepest level li elements)
     const eventItems = findEventItems(topItem);
@@ -44,7 +49,7 @@ function findEventItems(element) {
   return eventItems;
 }
 
-function extractEventData(eventLi, parentTopic, parentWikiUrl) {
+function extractEventData(eventLi, parentTopic) {
   // Clone the node to avoid modifying the original
   const clone = eventLi.cloneNode(true);
 
@@ -83,7 +88,6 @@ function extractEventData(eventLi, parentTopic, parentWikiUrl) {
 }
 
 async function fetchCurrentEvents() {
-
   const CACHE_KEY = "wiki_current_events";
   const TIME_KEY = "wiki_last_updated";
   const ONE_HOUR = 3600000;
@@ -133,10 +137,22 @@ function extractSections(doc) {
   const result = [];
 
   const sections = doc.querySelectorAll(".current-events-content")[0].children;
+  const sectionsArray = Array.from(sections);
+
+  const notEmpty = sectionsArray.some((section) => section.tagName == "P");
+
+  if (!notEmpty) {
+    return [
+      {
+        title: "Nothing to report just yet",
+        items: [],
+      },
+    ];
+  }
 
   let currentSection = null;
 
-  Array.from(sections).forEach((section) => {
+  sectionsArray.forEach((section) => {
     if (section.tagName == "P") {
       currentSection = {
         title: section.textContent.trim(),
@@ -182,26 +198,38 @@ function setupDOM(events) {
 
     categoryDiv.appendChild(headerDiv);
 
+    let eventDiv = null;
+    let lastTopic = "";
+
     const items = event.items;
     items.forEach((item) => {
-      const eventDiv = document.createElement("div");
-      eventDiv.setAttribute("class", "event");
+      if (lastTopic != item.topic) {
+        eventDiv = document.createElement("div");
+        eventDiv.setAttribute("class", "event");
 
-      const eventTitleDiv = document.createElement("div");
-      eventTitleDiv.setAttribute("class", "event-title");
-      eventTitleDiv.textContent = item.topic;
-      eventDiv.appendChild(eventTitleDiv);
+        const eventTitleDiv = document.createElement("div");
+        eventTitleDiv.setAttribute("class", "event-title");
+        eventTitleDiv.textContent = item.topic;
+        eventDiv.appendChild(eventTitleDiv);
+      }
+
+      lastTopic = item.topic;
 
       const eventTextDiv = document.createElement("div");
       eventTextDiv.setAttribute("class", "event-text");
       eventTextDiv.textContent = item.description;
       eventDiv.appendChild(eventTextDiv);
-
-      const anchor = document.createElement("a");
-      anchor.textContent = item.sources[0].name;
-      anchor.href = item.sources[0].url;
-      anchor.setAttribute("class", "source-badge");
-      eventDiv.appendChild(anchor);
+      
+      if (item.sources.length) {
+        item.sources.forEach((source) => {
+          const anchor = document.createElement("a");
+          anchor.textContent = source.name;
+          anchor.href = source.url;
+          anchor.target = "_blank";
+          anchor.setAttribute("class", "source-badge");
+          eventDiv.appendChild(anchor);
+        });
+      }
 
       categoryDiv.appendChild(eventDiv);
     });
