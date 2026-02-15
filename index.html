@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="manifest" href="/index/manifest.webmanifest">
+    <link rel="manifest" href="/index/manifest.webmanifest" />
   </head>
   <body>
     <div class="container">
@@ -19,8 +19,7 @@
     <script src="app.js" defer></script>
     <script>
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register('/index/sw.js',
-          {scope: '/index/'});
+        navigator.serviceWorker.register("/index/sw.js", { scope: "/index/" });
       }
     </script>
   </body>
