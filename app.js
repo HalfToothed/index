@@ -133,8 +133,23 @@ function htmlToDOM(htmlString) {
   return parser.parseFromString(htmlString, "text/html");
 }
 
+function setupNews(news){
+ const newsList = news.querySelectorAll(":scope > ul > li");
+  const ul = document.getElementById('newsList')
+
+  newsList.forEach(element => {
+    const li = document.createElement("li")
+    li.textContent = element.textContent
+    ul.appendChild(li);
+  });
+}
+
 function extractSections(doc) {
   const allEvents = [];
+
+  const allNews = doc.querySelector(".p-current-events-headlines");
+  setupNews(allNews)
+ 
 
   for (let i = 0; i < 2; i += 1) {
     const result = [];
