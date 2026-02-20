@@ -1,5 +1,5 @@
 // The version of the cache.
-const VERSION = "v1.1";
+const VERSION = "v2.0";
 
 let APP_PREFIX = 'index';
 // The name of the cache
@@ -12,7 +12,7 @@ const URLS = [
   `${GHPATH}/`,
   `${GHPATH}/index.html`,
   `${GHPATH}/styles.css`,
-  `${GHPATH}/icons/chikawa.png`,
+  `${GHPATH}/icons/indexIcon.png`,
   `${GHPATH}/app.js`
 ];
 

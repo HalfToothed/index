@@ -133,108 +133,140 @@ function htmlToDOM(htmlString) {
   return parser.parseFromString(htmlString, "text/html");
 }
 
+function setupNews(news) {
+  const img = news.querySelector("img");
+  const imgCaption = news.getElementsByClassName("thumbcaption")[0].textContent;
+  const imgDiv = document.getElementById("img");
+  imgDiv.appendChild(img);
+
+  const captionDiv = document.createElement("div");
+  captionDiv.setAttribute("class", "caption");
+  captionDiv.textContent = imgCaption;
+  imgDiv.appendChild(captionDiv);
+
+  const newsList = news.querySelectorAll(":scope > ul > li");
+  const ul = document.getElementById("newsList");
+
+  newsList.forEach((element) => {
+    const li = document.createElement("li");
+    li.textContent = element.textContent;
+    ul.appendChild(li);
+  });
+}
+
 function extractSections(doc) {
-  const result = [];
+  const allEvents = [];
 
-  const sections = doc.querySelectorAll(".current-events-content")[0].children;
-  const sectionsArray = Array.from(sections);
+  const allNews = doc.querySelector(".p-current-events-headlines");
+  setupNews(allNews);
 
-  const notEmpty = sectionsArray.some((section) => section.tagName == "P");
+  for (let i = 0; i < 2; i += 1) {
+    const result = [];
+    const date = doc.querySelectorAll(".current-events-title")[i].textContent;
+    const sections = doc.querySelectorAll(".current-events-content")[i]
+      .children;
+    const sectionsArray = Array.from(sections);
 
-  if (!notEmpty) {
-    return [
-      {
-        title: "Nothing to report just yet",
-        items: [],
-      },
-    ];
+    const notEmpty = sectionsArray.some((section) => section.tagName == "P");
+
+    if (!notEmpty) {
+      const emptyResult = [{ title: "Nothing to report just yet", items: [] }];
+      emptyResult.date = date;
+      allEvents.push(emptyResult);
+      continue;
+    }
+
+    let currentSection = null;
+
+    sectionsArray.forEach((section) => {
+      if (section.tagName == "P") {
+        currentSection = {
+          title: section.textContent.trim(),
+          items: [],
+        };
+      } else {
+        section.setAttribute("id", "list");
+        const events = parseEvents(section);
+        currentSection.items.push(...events);
+
+        if (currentSection && currentSection.items.length > 0) {
+          result.push(currentSection);
+        }
+      }
+    });
+    result.date = date;
+    allEvents.push(result);
   }
 
-  let currentSection = null;
-
-  sectionsArray.forEach((section) => {
-    if (section.tagName == "P") {
-      currentSection = {
-        title: section.textContent.trim(),
-        items: [],
-      };
-    } else {
-      section.setAttribute("id", "list");
-      const events = parseEvents(section);
-      currentSection.items.push(...events);
-
-      if (currentSection && currentSection.items.length > 0) {
-        result.push(currentSection);
-      }
-    }
-  });
-  return result;
+  return allEvents;
 }
 
-function getDate() {
-  const now = new Date();
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
+function setupDOM(allEvents) {
+  allEvents.forEach((events) => {
+    const container = document.getElementsByClassName("container")[0];
+    const header = document.createElement("div");
+    header.setAttribute("class", "header");
 
-  return now.toLocaleDateString("en-US", options);
-}
-function setupDOM(events) {
-  const date = document.getElementById("date");
-  date.textContent = getDate();
+    const dateDiv = document.createElement("div");
+    dateDiv.setAttribute("class", "date");
+    dateDiv.setAttribute("id", "date");
+    dateDiv.textContent = events.date;
+    header.appendChild(dateDiv);
 
-  const app = document.getElementById("app");
+    const app = document.createElement("div");
+    app.setAttribute("id", "app");
 
-  events.forEach((event) => {
-    const categoryDiv = document.createElement("div");
-    categoryDiv.setAttribute("class", "category-section");
+    events.forEach((event) => {
+      const categoryDiv = document.createElement("div");
+      categoryDiv.setAttribute("class", "category-section");
 
-    let headerDiv = document.createElement("div");
-    headerDiv.setAttribute("class", "category-header");
-    headerDiv.textContent = event.title;
+      let headerDiv = document.createElement("div");
+      headerDiv.setAttribute("class", "category-header");
+      headerDiv.textContent = event.title;
 
-    categoryDiv.appendChild(headerDiv);
+      categoryDiv.appendChild(headerDiv);
 
-    let eventDiv = null;
-    let lastTopic = "";
+      let eventDiv = null;
+      let lastTopic = "";
 
-    const items = event.items;
-    items.forEach((item) => {
-      if (lastTopic != item.topic) {
-        eventDiv = document.createElement("div");
-        eventDiv.setAttribute("class", "event");
+      const items = event.items;
+      items.forEach((item) => {
+        if (lastTopic != item.topic) {
+          eventDiv = document.createElement("div");
+          eventDiv.setAttribute("class", "event");
 
-        const eventTitleDiv = document.createElement("div");
-        eventTitleDiv.setAttribute("class", "event-title");
-        eventTitleDiv.textContent = item.topic;
-        eventDiv.appendChild(eventTitleDiv);
-      }
+          const eventTitleDiv = document.createElement("div");
+          eventTitleDiv.setAttribute("class", "event-title");
+          eventTitleDiv.textContent = item.topic;
+          eventDiv.appendChild(eventTitleDiv);
+        }
 
-      lastTopic = item.topic;
+        lastTopic = item.topic;
 
-      const eventTextDiv = document.createElement("div");
-      eventTextDiv.setAttribute("class", "event-text");
-      eventTextDiv.textContent = item.description;
-      eventDiv.appendChild(eventTextDiv);
-      
-      if (item.sources.length) {
-        item.sources.forEach((source) => {
-          const anchor = document.createElement("a");
-          anchor.textContent = source.name;
-          anchor.href = source.url;
-          anchor.target = "_blank";
-          anchor.setAttribute("class", "source-badge");
-          eventDiv.appendChild(anchor);
-        });
-      }
+        const eventTextDiv = document.createElement("div");
+        eventTextDiv.setAttribute("class", "event-text");
+        eventTextDiv.textContent = item.description;
+        eventDiv.appendChild(eventTextDiv);
 
-      categoryDiv.appendChild(eventDiv);
+        if (item.sources.length) {
+          item.sources.forEach((source) => {
+            const anchor = document.createElement("a");
+            anchor.textContent = source.name;
+            anchor.href = source.url;
+            anchor.target = "_blank";
+            anchor.setAttribute("class", "source-badge");
+            eventDiv.appendChild(anchor);
+          });
+        }
+
+        categoryDiv.appendChild(eventDiv);
+      });
+
+      app.appendChild(categoryDiv);
     });
 
-    app.appendChild(categoryDiv);
+    container.appendChild(header);
+    container.appendChild(app);
   });
 }
 
