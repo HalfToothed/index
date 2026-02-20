@@ -218,7 +218,8 @@ function setupDOM(allEvents) {
 
     events.forEach((event) => {
       const categoryDiv = document.createElement("div");
-      categoryDiv.setAttribute("class", "category-section");
+      const str = event.title.replaceAll(' ', '');
+      categoryDiv.setAttribute("class", `category-section ${str}`);
 
       let headerDiv = document.createElement("div");
       headerDiv.setAttribute("class", "category-header");
