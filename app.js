@@ -88,19 +88,6 @@ function extractEventData(eventLi, parentTopic) {
 }
 
 async function fetchCurrentEvents() {
-  const CACHE_KEY = "wiki_current_events";
-  const TIME_KEY = "wiki_last_updated";
-  const ONE_HOUR = 3600000;
-
-  const date = new Date();
-  const lastUpdated = localStorage.getItem(TIME_KEY);
-  const cachedValue = localStorage.getItem(CACHE_KEY);
-
-  const currentTime = date.getTime();
-
-  if (cachedValue && lastUpdated && currentTime - lastUpdated < ONE_HOUR) {
-    return cachedValue;
-  }
 
   const url =
     "https://en.wikipedia.org/w/api.php" +
@@ -111,6 +98,7 @@ async function fetchCurrentEvents() {
     "&origin=*";
 
   try {
+
     const res = await fetch(url);
 
     if (!res.ok) throw new Error(`Network response was not ok: ${res.status}`);
@@ -118,13 +106,10 @@ async function fetchCurrentEvents() {
     const data = await res.json();
     const value = data.parse.text["*"];
 
-    localStorage.setItem(CACHE_KEY, value);
-    localStorage.setItem(TIME_KEY, date.getTime());
-
     return value;
   } catch (error) {
     console.error("Fetch failed:", error);
-    return catchedValue || null;
+    return "";
   }
 }
 
@@ -218,7 +203,8 @@ function setupDOM(allEvents) {
 
     events.forEach((event) => {
       const categoryDiv = document.createElement("div");
-      categoryDiv.setAttribute("class", "category-section");
+      const str = event.title.replaceAll(' ', '');
+      categoryDiv.setAttribute("class", `category-section ${str}`);
 
       let headerDiv = document.createElement("div");
       headerDiv.setAttribute("class", "category-header");
