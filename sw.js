@@ -3,7 +3,7 @@ const VERSION = "v2.0";
 
 let APP_PREFIX = 'index';
 // The name of the cache
-let CACHE_NAME = APP_PREFIX + VERSION
+const CACHE_NAME = APP_PREFIX + VERSION
 
 let GHPATH = '/index';
 
@@ -11,48 +11,66 @@ let GHPATH = '/index';
 const URLS = [
   `${GHPATH}/`,
   `${GHPATH}/index.html`,
-  `${GHPATH}/styles.css`,
+  `${GHPATH}/style.css`,
   `${GHPATH}/icons/indexIcon.png`,
   `${GHPATH}/app.js`
 ];
 
-self.addEventListener('fetch', function (e) {
-  console.log('Fetch request : ' + e.request.url);
-  e.respondWith(
-    caches.match(e.request).then(function (request) {
-      if (request) { 
-        console.log('Responding with cache : ' + e.request.url);
-        return request
-      } else {       
-        console.log('File is not cached, fetching : ' + e.request.url);
-        return fetch(e.request)
-      }
-    })
-  )
-})
+self.addEventListener("fetch", (event) => {
+  if (event.request.url.includes("wikipedia.org/w/api.php")) {
+    event.respondWith(networkFirst(event.request));
+  }
+});
 
-self.addEventListener('install', function (e) {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(function (cache) {
-      console.log('Installing cache : ' + CACHE_NAME);
-      return cache.addAll(URLS)
-    })
-  )
-})
+async function networkFirst(request) {
+  const cache = await caches.open(CACHE_NAME);
 
-self.addEventListener('activate', function (e) {
-  e.waitUntil(
-    caches.keys().then(function (keyList) {
-      var cacheWhitelist = keyList.filter(function (key) {
-        return key.indexOf(APP_PREFIX)
-      })
-      cacheWhitelist.push(CACHE_NAME);
-      return Promise.all(keyList.map(function (key, i) {
-        if (cacheWhitelist.indexOf(key) === -1) {
-          console.log('Deleting cache : ' + keyList[i] );
-          return caches.delete(keyList[i])
-        }
-      }))
-    })
-  )
-})
+  try {
+    const networkResponse = await fetch(request);
+
+    // Update cache
+    cache.put(request, networkResponse.clone());
+
+    return networkResponse;
+
+  } catch (error) {
+    // If offline, return cached version
+    const cachedResponse = await cache.match(request);
+
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    return new Response(
+      JSON.stringify({ error: "Offline and no cached data" }),
+      { headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      cache.addAll(URLS);
+    })(),
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    (async () => {
+      const names = await caches.keys();
+      await Promise.all(
+        names.map((name) => {
+          if (name !== CACHE_NAME) {
+            console.log('Deleting cache : ');
+            return caches.delete(name);
+          }
+          return undefined;
+        }),
+      );
+      await clients.claim();
+    })(),
+  );
+});

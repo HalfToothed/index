@@ -26,6 +26,7 @@
   --accent-science:       #7D3C98;
   --accent-sports:        #C0632A;
   --accent-international: #F472B6;
+  --accent-art:           #94f112;
   --accent-default:       #e5e5e5;
 
   --font-display: 'DM Serif Display', Georgia, serif;
@@ -270,6 +271,7 @@ img { display: block; max-width: 100%; }
 .Healthandenvironment       { border-left-color: var(--accent-science); }
 .Sports        { border-left-color: var(--accent-sports); }
 .Internationalrelations { border-left-color: var(--accent-international); }
+.Artsandculture { border-left-color: var(--accent-art); }
 
 .category-header {
   font-family: var(--font-mono);
@@ -307,7 +309,6 @@ img { display: block; max-width: 100%; }
   color: var(--text-dim);
   padding-bottom: calc(var(--space)*1.25);
   margin-bottom: calc(var(--space)*1.25);
-  border-bottom: 1px solid var(--border-light);
 }
 .event-title:empty { display: none; }
 
