@@ -1,5 +1,5 @@
 // The version of the cache.
-const VERSION = "v2.0";
+const VERSION = "v2.1";
 
 let APP_PREFIX = 'index';
 // The name of the cache
