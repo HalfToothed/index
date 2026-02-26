@@ -257,10 +257,12 @@ function setupDOM(allEvents) {
 }
 
 async function loadCurrentEvents() {
+  const loader = document.querySelector('.loader');
   const html = await fetchCurrentEvents();
   const doc = htmlToDOM(html);
   const eventObject = extractSections(doc);
   setupDOM(eventObject);
+  loader.style.display = 'none';
 }
 
 loadCurrentEvents();

@@ -1,11 +1,4 @@
 /* ============================================
-   INDEX — Dark Editorial Design System
-   DM Serif Display + IBM Plex Sans + IBM Plex Mono
-   ============================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
-/* ============================================
    Variables
    ============================================ */
 :root {
@@ -16,7 +9,7 @@
   --border-light:   #1E1E1E;
   --text-primary:   #EDEBE6;
   --text-secondary: #b5b4b1;
-  --text-dim:       #7f7b77;
+  --text-dim:       #c5a07e;
 
   /* Category accent rail colors */
   --accent-armed:         #B03A2E;
@@ -44,7 +37,7 @@
    Reset & Base
    ============================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
 body {
   background: var(--bg);
   color: var(--text-primary);
@@ -68,47 +61,14 @@ img { display: block; max-width: 100%; }
   padding: 0 var(--padding) 80px;
 }
 
-/* ============================================
-   Masthead  (.masthead or use your .header h1)
-   ============================================ */
-.masthead {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: calc(var(--space)*4) 0 calc(var(--space)*3);
-  border-bottom: 1px solid var(--border);
-  gap: 16px;
-}
-
-.masthead h1 {
+.indexHeader h1 {
   font-family: var(--font-display);
   font-style: italic;
   font-size: clamp(44px, 10vw, 68px);
   font-weight: 400;
   letter-spacing: -0.025em;
   line-height: 0.9;
-  color: var(--text-primary);
-  flex-shrink: 0;
-}
-
-/* If reusing .header for the masthead */
-.indexHeader,
-.header:has(h1) {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: calc(var(--space)*4) 0 calc(var(--space)*3);
-  border-bottom: 1px solid var(--border);
-}
-
-.indexHeader h1,
-.header h1 {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(44px, 10vw, 68px);
-  font-weight: 400;
-  letter-spacing: -0.025em;
-  line-height: 0.9;
+   padding: calc(var(--space)*4) 0 calc(var(--space)*3);
   color: var(--text-primary);
 }
 
@@ -206,13 +166,6 @@ img { display: block; max-width: 100%; }
   overflow: hidden;
 }
 
-/* Remove the conflicting masthead border style from date headers */
-.header:has(.date) {
-  border-left: none;
-  background: transparent;
-  display: block;
-}
-
 .date-label,
 .header .date {
   position: relative;
@@ -231,27 +184,6 @@ img { display: block; max-width: 100%; }
 .date-label .weekday,
 .header .date .weekday {
   color: var(--text-primary);
-}
-
-/* Ghost number — add <div class="date-ghost">19</div>
-   inside each .date-section or .header:has(.date) */
-.date-ghost {
-  position: absolute;
-  right: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 96px;
-  font-weight: 400;
-  line-height: 1;
-  color: var(--text-primary);
-  opacity: 0.05;
-  pointer-events: none;
-  user-select: none;
-  white-space: nowrap;
-  letter-spacing: -0.04em;
-  z-index: 1;
 }
 
 /* ============================================
@@ -312,17 +244,6 @@ img { display: block; max-width: 100%; }
 }
 .event-title:empty { display: none; }
 
-/* First story = DM Serif headline */
-/* .event > .event-text:first-of-type {
-  font-family: var(--font-display);
-  font-size: 19px;
-  font-weight: 400;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-  margin-bottom: calc(var(--space)*1.5);
-} */
-
 /* Additional stories in same event block */
 .event-text {
   font-size: 13.5px;
@@ -369,6 +290,40 @@ img { display: block; max-width: 100%; }
 
 .source-badge:hover { color: var(--text-secondary); border-color: #404040; }
 .source-badge:hover::before { background: var(--text-secondary); }
+
+#loader-div {
+  margin: 0px;
+  padding: 0px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;    
+  animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+} 
 
 /* ============================================
    Animations
