@@ -7,20 +7,22 @@
   --bg-card:        #181818;
   --border:         #2A2A2A;
   --border-light:   #1E1E1E;
-  --text-primary:   #EDEBE6;
-  --text-secondary: #b5b4b1;
-  --text-dim:       #c5a07e;
-
-  /* Category accent rail colors */
-  --accent-armed:         #B03A2E;
-  --accent-law:           #2471A3;
-  --accent-disasters:     #A67C00;
-  --accent-politics:      #1E8449;
-  --accent-science:       #7D3C98;
-  --accent-sports:        #C0632A;
-  --accent-international: #F472B6;
-  --accent-art:           #94f112;
-  --accent-default:       #e5e5e5;
+ 
+  --text-primary:   #FFFAF0;
+  --text-secondary: #AFC3D6;
+  --text-dim:       #FFD8A8;
+  --accent-link:    #da7e46;
+  
+  --accent-armed:         #FF4C4C;
+  --accent-law:           #4DA6FF;
+  --accent-disasters:     #FFC300;
+  --accent-politics:      #2ECC71;
+  --accent-science:       #B266FF;
+  --accent-sports:        #FF8C42;
+  --accent-international: #FF66CC;
+  --accent-art:           #00E5A8;
+  --accent-default:       #E5E5E5;
+  --accent-business:      #87a3b6;
 
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-sans:    'IBM Plex Sans', 'Helvetica Neue', sans-serif;
@@ -204,6 +206,9 @@ img { display: block; max-width: 100%; }
 .Sports        { border-left-color: var(--accent-sports); }
 .Internationalrelations { border-left-color: var(--accent-international); }
 .Artsandculture { border-left-color: var(--accent-art); }
+.Scienceandtechnology { border-left-color: var(--accent-science); }
+.Businessandeconomy { border-left-color: var(--accent-business); }
+
 
 .category-header {
   font-family: var(--font-mono);
@@ -268,7 +273,7 @@ img { display: block; max-width: 100%; }
   font-weight: 400;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--text-dim);
+  color: var(--accent-link);
   background: var(--bg-lift);
   border: 1px solid var(--border);
   border-radius: 20px;
