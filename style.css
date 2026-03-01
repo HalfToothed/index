@@ -1,11 +1,4 @@
 /* ============================================
-   INDEX — Dark Editorial Design System
-   DM Serif Display + IBM Plex Sans + IBM Plex Mono
-   ============================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
-/* ============================================
    Variables
    ============================================ */
 :root {
@@ -14,21 +7,22 @@
   --bg-card:        #181818;
   --border:         #2A2A2A;
   --border-light:   #1E1E1E;
-  --text-primary:   #EDEBE6;
-  --text-secondary: #b5b4b1;
-  --text-dim:       #7f7b77;
-
-  /* Category accent rail colors */
-  --accent-armed:         #B03A2E;
-  --accent-law:           #2471A3;
-  --accent-disasters:     #A67C00;
-  --accent-politics:      #1E8449;
-  --accent-science:       #7D3C98;
-  --accent-sports:        #C0632A;
-  --accent-international: #F472B6;
-  --accent-art:           #94f112;
-  --accent-business:      #2a236c;
-  --accent-default:       #e5e5e5;
+ 
+  --text-primary:   #FFFAF0;
+  --text-secondary: #AFC3D6;
+  --text-dim:       #FFD8A8;
+  --accent-link:    #da7e46;
+  
+  --accent-armed:         #FF4C4C;
+  --accent-law:           #4DA6FF;
+  --accent-disasters:     #FFC300;
+  --accent-politics:      #2ECC71;
+  --accent-science:       #B266FF;
+  --accent-sports:        #FF8C42;
+  --accent-international: #FF66CC;
+  --accent-art:           #00E5A8;
+  --accent-default:       #E5E5E5;
+  --accent-business:      #87a3b6;
 
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-sans:    'IBM Plex Sans', 'Helvetica Neue', sans-serif;
@@ -45,7 +39,7 @@
    Reset & Base
    ============================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
 body {
   background: var(--bg);
   color: var(--text-primary);
@@ -69,47 +63,14 @@ img { display: block; max-width: 100%; }
   padding: 0 var(--padding) 80px;
 }
 
-/* ============================================
-   Masthead  (.masthead or use your .header h1)
-   ============================================ */
-.masthead {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: calc(var(--space)*4) 0 calc(var(--space)*3);
-  border-bottom: 1px solid var(--border);
-  gap: 16px;
-}
-
-.masthead h1 {
+.indexHeader h1 {
   font-family: var(--font-display);
   font-style: italic;
   font-size: clamp(44px, 10vw, 68px);
   font-weight: 400;
   letter-spacing: -0.025em;
   line-height: 0.9;
-  color: var(--text-primary);
-  flex-shrink: 0;
-}
-
-/* If reusing .header for the masthead */
-.indexHeader,
-.header:has(h1) {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: calc(var(--space)*4) 0 calc(var(--space)*3);
-  border-bottom: 1px solid var(--border);
-}
-
-.indexHeader h1,
-.header h1 {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(44px, 10vw, 68px);
-  font-weight: 400;
-  letter-spacing: -0.025em;
-  line-height: 0.9;
+   padding: calc(var(--space)*4) 0 calc(var(--space)*3);
   color: var(--text-primary);
 }
 
@@ -207,13 +168,6 @@ img { display: block; max-width: 100%; }
   overflow: hidden;
 }
 
-/* Remove the conflicting masthead border style from date headers */
-.header:has(.date) {
-  border-left: none;
-  background: transparent;
-  display: block;
-}
-
 .date-label,
 .header .date {
   position: relative;
@@ -234,27 +188,6 @@ img { display: block; max-width: 100%; }
   color: var(--text-primary);
 }
 
-/* Ghost number — add <div class="date-ghost">19</div>
-   inside each .date-section or .header:has(.date) */
-.date-ghost {
-  position: absolute;
-  right: -10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 96px;
-  font-weight: 400;
-  line-height: 1;
-  color: var(--text-primary);
-  opacity: 0.05;
-  pointer-events: none;
-  user-select: none;
-  white-space: nowrap;
-  letter-spacing: -0.04em;
-  z-index: 1;
-}
-
 /* ============================================
    Category Sections
    ============================================ */
@@ -273,7 +206,9 @@ img { display: block; max-width: 100%; }
 .Sports        { border-left-color: var(--accent-sports); }
 .Internationalrelations { border-left-color: var(--accent-international); }
 .Artsandculture { border-left-color: var(--accent-art); }
+.Scienceandtechnology { border-left-color: var(--accent-science); }
 .Businessandeconomy { border-left-color: var(--accent-business); }
+
 
 .category-header {
   font-family: var(--font-mono);
@@ -314,17 +249,6 @@ img { display: block; max-width: 100%; }
 }
 .event-title:empty { display: none; }
 
-/* First story = DM Serif headline */
-/* .event > .event-text:first-of-type {
-  font-family: var(--font-display);
-  font-size: 19px;
-  font-weight: 400;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-  margin-bottom: calc(var(--space)*1.5);
-} */
-
 /* Additional stories in same event block */
 .event-text {
   font-size: 13.5px;
@@ -349,7 +273,7 @@ img { display: block; max-width: 100%; }
   font-weight: 400;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--text-dim);
+  color: var(--accent-link);
   background: var(--bg-lift);
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -371,6 +295,40 @@ img { display: block; max-width: 100%; }
 
 .source-badge:hover { color: var(--text-secondary); border-color: #404040; }
 .source-badge:hover::before { background: var(--text-secondary); }
+
+#loader-div {
+  margin: 0px;
+  padding: 0px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 45%;
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;    
+  animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+} 
 
 /* ============================================
    Animations

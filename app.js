@@ -119,16 +119,7 @@ function htmlToDOM(htmlString) {
 }
 
 function setupNews(news) {
-  const img = news.querySelector("img");
-  const imgCaption = news.getElementsByClassName("thumbcaption")[0].textContent;
-  const imgDiv = document.getElementById("img");
-  imgDiv.appendChild(img);
-
-  const captionDiv = document.createElement("div");
-  captionDiv.setAttribute("class", "caption");
-  captionDiv.textContent = imgCaption;
-  imgDiv.appendChild(captionDiv);
-
+  
   const newsList = news.querySelectorAll(":scope > ul > li");
   const ul = document.getElementById("newsList");
 
@@ -137,13 +128,31 @@ function setupNews(news) {
     li.textContent = element.textContent;
     ul.appendChild(li);
   });
+  
+  const img = news.querySelector("img");
+  
+  if(img){
+    const imgCaption = news.getElementsByClassName("thumbcaption")[0].textContent;
+    const imgDiv = document.getElementById("img");
+    imgDiv.appendChild(img);
+
+    const captionDiv = document.createElement("div");
+    captionDiv.setAttribute("class", "caption");
+    captionDiv.textContent = imgCaption;
+    imgDiv.appendChild(captionDiv);
+  }
 }
 
 function extractSections(doc) {
   const allEvents = [];
 
   const allNews = doc.querySelector(".p-current-events-headlines");
-  setupNews(allNews);
+  if(allNews){
+    setupNews(allNews);
+  } else{
+    const newsDiv = document.getElementById('news');
+    newsDiv.style.display = 'none';
+  }
 
   for (let i = 0; i < 2; i += 1) {
     const result = [];
@@ -261,6 +270,9 @@ async function loadCurrentEvents() {
   const doc = htmlToDOM(html);
   const eventObject = extractSections(doc);
   setupDOM(eventObject);
+
+  const loader = document.querySelector('.loader');
+  loader.style.display = 'none';
 }
 
 loadCurrentEvents();
