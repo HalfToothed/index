@@ -13,6 +13,8 @@ breakdown of what's happened, why it matters, and background on the broader
 situation — so a reader can catch up on a story without digging through past
 days themselves.
 
+**Live:** https://index.abhishekpatil.tech/
+
 ---
 
 ## Source & Acknowledgment
