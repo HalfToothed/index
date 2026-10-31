@@ -277,7 +277,7 @@ img { display: block; max-width: 100%; }
   font-size: 12px;
   font-weight: 200;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   margin-block-end: calc(var(--space)*1);
 }
 
